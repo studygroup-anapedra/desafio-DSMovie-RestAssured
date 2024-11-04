@@ -17,8 +17,8 @@ public class Movie {
 	private Integer count;
 	private String image;
 	
-//	@OneToMany(mappedBy = "id.movie")
-//	private Set<Score> scores = new HashSet<>();
+	//@OneToMany(mappedBy = "id.movie")
+	//private Set<Score> scores = new HashSet<>();
 	
 	public Movie() {
 	}
@@ -73,7 +73,7 @@ public class Movie {
 
 	//public Set<Score> getScores() {
 	//	return scores;
-	//}
+//	}
 
 	@Override
 	public int hashCode() {
