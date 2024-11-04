@@ -134,7 +134,16 @@ public class MovieControllerRA {
 
 	@Test
 	public void insertShouldReturnForbiddenWhenClientLogged() throws Exception {
-
+		given()
+				.baseUri(BASE_URI)
+				.header("Authorization", "Bearer " + clientToken)
+				.contentType(ContentType.JSON)
+				.accept(ContentType.JSON)
+				.body(postMovieInstance)
+				.when()
+				.post(MOVIE_ENDPOINT)
+				.then()
+				.statusCode(403);
 	}
 	
 	@Test
