@@ -1,5 +1,6 @@
 package com.devsuperior.dsmovie.controllers.exceptionhandlers;
 
+import com.devsuperior.dsmovie.dto.CustomErrorDTO;
 import com.devsuperior.dsmovie.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
