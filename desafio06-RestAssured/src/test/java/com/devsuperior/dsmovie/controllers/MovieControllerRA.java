@@ -41,6 +41,16 @@ public class MovieControllerRA {
 
 	@Test
 	public void findByIdShouldReturnMovieWhenIdExists() {
+		given()
+				.baseUri(BASE_URI)
+				.pathParam("id", 1)
+				.when()
+				.get(MOVIE_ENDPOINT + "/{id}")
+				.then()
+				.statusCode(200)
+				.body("id", is(1))
+				.body("title", equalTo("The Witcher"));
+
 
 	}
 
