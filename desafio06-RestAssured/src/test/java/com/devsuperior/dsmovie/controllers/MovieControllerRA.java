@@ -148,6 +148,16 @@ public class MovieControllerRA {
 	
 	@Test
 	public void insertShouldReturnUnauthorizedWhenInvalidToken() throws Exception {
+		given()
+				.baseUri(BASE_URI)
+				.header("Authorization", "Bearer " + invalidToken)
+				.contentType(ContentType.JSON)
+				.accept(ContentType.JSON)
+				.body(postMovieInstance)
+				.when()
+				.post(MOVIE_ENDPOINT)
+				.then()
+				.statusCode(401);
 
 	}
 }
