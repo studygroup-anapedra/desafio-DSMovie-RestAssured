@@ -27,6 +27,15 @@ public class MovieControllerRA {
 
 	@Test
 	public void findAllShouldReturnPagedMoviesWhenMovieTitleParamIsNotEmpty() {
+		given()
+				.baseUri(BASE_URI)
+				.queryParam("title", "The Witcher")
+				.when()
+				.get(MOVIE_ENDPOINT)
+				.then()
+				.statusCode(200)
+				.body("content.id[0]", is(1))
+				.body("content.title[0]", equalTo("The Witcher"));
 
 	}
 
