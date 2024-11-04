@@ -56,6 +56,13 @@ public class MovieControllerRA {
 
 	@Test
 	public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() {
+		given()
+				.baseUri(BASE_URI)
+				.pathParam("id", 1000)
+				.when()
+				.get(MOVIE_ENDPOINT + "/{id}")
+				.then()
+				.statusCode(404);
 
 	}
 
