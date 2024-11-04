@@ -28,4 +28,18 @@ public class MovieService {
 				.orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
 		return new MovieDTO(result);
 	}
+
+	@Transactional
+	public MovieDTO insert(MovieDTO dto) {
+		Movie entity = new Movie();
+		copyDtoToEntity(dto, entity);
+		entity = repository.save(entity);
+		return new MovieDTO(entity);
+	}
+	private void copyDtoToEntity(MovieDTO dto, Movie entity) {
+		entity.setTitle(dto.getTitle());
+		entity.setScore(dto.getScore());
+		entity.setCount(dto.getCount());
+		entity.setImage(dto.getImage());
+	}
 }
