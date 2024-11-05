@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 public class ScoreControllerRA {
 
@@ -50,6 +51,18 @@ public class ScoreControllerRA {
 
 	@Test
 	public void saveScoreShouldReturnUnprocessableEntityWhenMissingMovieId() throws Exception {
+		double score = 4.5;
+
+		given()
+				.baseUri(BASE_URI)
+				.header("Authorization", "Bearer " + clientToken)
+				.contentType(ContentType.JSON)
+				.body(createScorePayload(null, score))
+				.when()
+				.post(SCORE_ENDPOINT)
+				.then()
+				.statusCode(422)
+				.body("errors.message[0]", equalTo("Campo requerido"));
 	}
 	
 	@Test
