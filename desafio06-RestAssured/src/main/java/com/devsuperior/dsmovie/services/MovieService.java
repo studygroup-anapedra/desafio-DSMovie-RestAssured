@@ -2,7 +2,7 @@ package com.devsuperior.dsmovie.services;
 
 import com.devsuperior.dsmovie.dto.MovieDTO;
 import com.devsuperior.dsmovie.entities.Movie;
-import com.devsuperior.dsmovie.exceptions.ResourceNotFoundException;
+import com.devsuperior.dsmovie.services.exceptions.ResourceNotFoundException;
 import com.devsuperior.dsmovie.repositories.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
