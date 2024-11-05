@@ -66,7 +66,20 @@ public class ScoreControllerRA {
 	}
 	
 	@Test
-	public void saveScoreShouldReturnUnprocessableEntityWhenScoreIsLessThanZero() throws Exception {		
+	public void saveScoreShouldReturnUnprocessableEntityWhenScoreIsLessThanZero() throws Exception {
+		long validMovieId = 1L;
+		double invalidScore = -1.0;
+
+		given()
+				.baseUri(BASE_URI)
+				.header("Authorization", "Bearer " + clientToken)
+				.contentType(ContentType.JSON)
+				.body(createScorePayload(validMovieId, invalidScore))
+				.when()
+				.post(SCORE_ENDPOINT)
+				.then()
+				.statusCode(422)
+				.body("errors.message[0]", equalTo("Valor mínimo 0"));
 	}
 
 
