@@ -1,4 +1,4 @@
-package com.devsuperior.dsmovie.exceptions;
+package com.devsuperior.dsmovie.services.exceptions;
 
 @SuppressWarnings("serial")
 public class ResourceNotFoundException extends RuntimeException {
