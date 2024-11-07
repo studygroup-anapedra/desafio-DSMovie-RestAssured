@@ -7,10 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/scores")
@@ -23,6 +20,13 @@ public class ScoreController {
 	@PostMapping
 	public ResponseEntity<MovieDTO> saveScore(@Valid @RequestBody ScoreDTO dto) {
 		MovieDTO movieDTO = service.saveScore(dto);
+		return ResponseEntity.ok().body(movieDTO);
+	}
+
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
+	@PutMapping
+	public ResponseEntity<MovieDTO> updateScore(@Valid @RequestBody ScoreDTO dto) {
+		MovieDTO movieDTO = service.updateScore(dto);
 		return ResponseEntity.ok().body(movieDTO);
 	}
 
