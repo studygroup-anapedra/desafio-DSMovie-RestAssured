@@ -82,25 +82,42 @@ public class ScoreControllerRA {
 				.body("errors.message[0]", equalTo("Valor mínimo 0"));
 	}
 
+
+
 	@Test
-	public void updateScoreShouldReturnNotFoundWhenMovieIdDoesNotExist() {
-		long nonExistentMovieId = 9999L;
+	public void updateScoreShouldReturnUnprocessableEntityWhenMissingMovieId() {
 		double score = 4.5;
 
 		given()
 				.baseUri(BASE_URI)
 				.header("Authorization", "Bearer " + clientToken)
 				.contentType(ContentType.JSON)
-				.body(createScorePayload(nonExistentMovieId, score))
+				.body(createScorePayload(null, score))
 				.when()
-				.put(SCORE_ENDPOINT)
+				.put(SCORE_ENDPOINT) // Alterado para PUT
 				.then()
-				.statusCode(404);
+				.statusCode(422)
+				.body("errors.message[0]", equalTo("Campo requerido"));
 	}
 
+	@Test
+	public void updateScoreShouldReturnUnprocessableEntityWhenScoreIsLessThanZero() {
+		long validMovieId = 1L;
+		double invalidScore = -1.0;
 
+		given()
+				.baseUri(BASE_URI)
+				.header("Authorization", "Bearer " + clientToken)
+				.contentType(ContentType.JSON)
+				.body(createScorePayload(validMovieId, invalidScore))
+				.when()
+				.put(SCORE_ENDPOINT) // Alterado para PUT
+				.then()
+				.statusCode(422)
+				.body("errors.message[0]", equalTo("Valor mínimo 0"));
+	}
 
-
+	
 	private Map<String, Object> createScorePayload(Long movieId, Double score) {
 		Map<String, Object> scorePayload = new HashMap<>();
 		if (movieId != null) scorePayload.put("movieId", movieId);
