@@ -17,40 +17,57 @@ public class ScoreService {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private MovieRepository movieRepository;
-	
+
 	@Autowired
 	private ScoreRepository scoreRepository;
-	
+
 	@Transactional
 	public MovieDTO saveScore(ScoreDTO dto) {
-		
 		User user = userService.authenticated();
-		
+
 		Movie movie = movieRepository.findById(dto.getMovieId())
 				.orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
-		
+
 		Score score = new Score();
 		score.setMovie(movie);
 		score.setUser(user);
 		score.setValue(dto.getScore());
-		
+
 		score = scoreRepository.saveAndFlush(score);
-		
-		double sum = 0.0;
-		for (Score s : movie.getScores()) {
-			sum = sum + s.getValue();
-		}
-			
-		double avg = sum / movie.getScores().size();
-		
-		movie.setScore(avg);
-		movie.setCount(movie.getScores().size());
-		
-		movie = movieRepository.save(movie);
-		
+
+		updateMovieScore(movie);
+
 		return new MovieDTO(movie);
 	}
+
+	@Transactional
+	public MovieDTO updateScore(ScoreDTO dto) {
+		User user = userService.authenticated();
+		Movie movie = movieRepository.getReferenceById(dto.getMovieId());
+
+		Score score = scoreRepository.findByUserAndMovie(user, movie)
+				.orElseThrow(() -> new ResourceNotFoundException("Pontuação não encontrada para o usuário e filme"));
+
+		score.setValue(dto.getScore());
+		scoreRepository.saveAndFlush(score);
+
+		updateMovieScore(movie);
+
+		return new MovieDTO(movie);
+	}
+
+	private void updateMovieScore(Movie movie) {
+		double sum = movie.getScores().stream().mapToDouble(Score::getValue).sum();
+		double avg = sum / movie.getScores().size();
+
+		movie.setScore(avg);
+		movie.setCount(movie.getScores().size());
+
+		movieRepository.save(movie);
+	}
+
+
 }
