@@ -23,9 +23,8 @@ public class ScoreController {
 		return ResponseEntity.ok().body(movieDTO);
 	}
 
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
-	@PutMapping
-	public ResponseEntity<MovieDTO> updateScore(@Valid @RequestBody ScoreDTO dto) {
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<MovieDTO> updateScore(@PathVariable Long id, @Valid @RequestBody ScoreDTO dto) {
 		MovieDTO movieDTO = service.updateScore(dto);
 		return ResponseEntity.ok().body(movieDTO);
 	}

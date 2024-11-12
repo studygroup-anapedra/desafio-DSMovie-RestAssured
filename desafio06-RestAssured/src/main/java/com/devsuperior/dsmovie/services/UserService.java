@@ -1,5 +1,6 @@
 package com.devsuperior.dsmovie.services;
 
+import com.devsuperior.dsmovie.dto.UserDTO;
 import com.devsuperior.dsmovie.entities.Role;
 import com.devsuperior.dsmovie.entities.User;
 import com.devsuperior.dsmovie.projections.UserDetailsProjection;
@@ -50,5 +51,10 @@ public class UserService implements UserDetailsService {
         }
 
         return user;
+    }
+
+    public UserDTO me(){
+        User user = authenticated();
+        return new UserDTO(user);
     }
 }
