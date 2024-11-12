@@ -7,13 +7,17 @@ import com.devsuperior.dsmovie.entities.Score;
 import com.devsuperior.dsmovie.entities.User;
 import com.devsuperior.dsmovie.repositories.MovieRepository;
 import com.devsuperior.dsmovie.repositories.ScoreRepository;
+import com.devsuperior.dsmovie.services.exceptions.ForbiddenException;
 import com.devsuperior.dsmovie.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class ScoreService {
+
 
 	@Autowired
 	private UserService userService;
@@ -25,9 +29,8 @@ public class ScoreService {
 	private ScoreRepository scoreRepository;
 
 	@Transactional
-	public MovieDTO saveScore(ScoreDTO dto) {
+	public MovieDTO saveScore(ScoreDTO dto){
 		User user = userService.authenticated();
-
 		Movie movie = movieRepository.findById(dto.getMovieId())
 				.orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
 
@@ -48,6 +51,10 @@ public class ScoreService {
 		User user = userService.authenticated();
 		Movie movie = movieRepository.getReferenceById(dto.getMovieId());
 
+		if (!dto.getUserId().equals(userService.me().getId())) {
+			throw new ForbiddenException("Access denied: User does not have the required permissions.");
+		}
+
 		Score score = scoreRepository.findByUserAndMovie(user, movie)
 				.orElseThrow(() -> new ResourceNotFoundException("Pontuação não encontrada para o usuário e filme"));
 
@@ -59,7 +66,9 @@ public class ScoreService {
 		return new MovieDTO(movie);
 	}
 
+
 	private void updateMovieScore(Movie movie) {
+
 		double sum = movie.getScores().stream().mapToDouble(Score::getValue).sum();
 		double avg = sum / movie.getScores().size();
 
