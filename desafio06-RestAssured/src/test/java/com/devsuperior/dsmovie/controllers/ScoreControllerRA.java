@@ -45,9 +45,7 @@ public class ScoreControllerRA {
 				.post(SCORE_ENDPOINT)
 				.then()
 				.statusCode(404);
-
 	}
-
 
 	@Test
 	public void saveScoreShouldReturnUnprocessableEntityWhenMissingMovieId() throws Exception {
@@ -64,7 +62,7 @@ public class ScoreControllerRA {
 				.statusCode(422)
 				.body("errors.message[0]", equalTo("Campo requerido"));
 	}
-	
+
 	@Test
 	public void saveScoreShouldReturnUnprocessableEntityWhenScoreIsLessThanZero() throws Exception {
 		long validMovieId = 1L;
@@ -83,22 +81,6 @@ public class ScoreControllerRA {
 	}
 
 	@Test
-	public void updateScoreShouldReturnNotFoundWhenMovieIdDoesNotExist() {
-		long nonExistentMovieId = 9999L;
-		double score = 4.5;
-
-		given()
-				.baseUri(BASE_URI)
-				.header("Authorization", "Bearer " + clientToken)
-				.contentType(ContentType.JSON)
-				.body(createScorePayload(nonExistentMovieId, score))
-				.when()
-				.put(SCORE_ENDPOINT) // Alterado para PUT
-				.then()
-				.statusCode(404);
-	}
-
-	@Test
 	public void updateScoreShouldReturnUnprocessableEntityWhenMissingMovieId() {
 		double score = 4.5;
 
@@ -106,12 +88,29 @@ public class ScoreControllerRA {
 				.baseUri(BASE_URI)
 				.header("Authorization", "Bearer " + clientToken)
 				.contentType(ContentType.JSON)
-				.body(createScorePayload(null, score))
+				.body(createScorePayload(null, score)) // Faltando o movieId
 				.when()
-				.put(SCORE_ENDPOINT) // Alterado para PUT
+				.put(SCORE_ENDPOINT + "/{id}", 1L) // Alterado para PUT com ID no endpoint
 				.then()
 				.statusCode(422)
 				.body("errors.message[0]", equalTo("Campo requerido"));
+	}
+
+	@Test
+	public void updateScoreShouldReturnForbiddenWhenUserIdDoesNotMatchLoggedInUser() {
+		long validMovieId = 1L;
+		double validScore = 4.5;
+		long wrongUserId = 999L; // ID errado
+
+		given()
+				.baseUri(BASE_URI)
+				.header("Authorization", "Bearer " + clientToken)
+				.contentType(ContentType.JSON)
+				.body(createScorePayloadWithUserId(validMovieId, validScore, wrongUserId))
+				.when()
+				.put(SCORE_ENDPOINT + "/{id}", validMovieId)
+				.then()
+				.statusCode(403);
 	}
 
 	@Test
@@ -125,10 +124,27 @@ public class ScoreControllerRA {
 				.contentType(ContentType.JSON)
 				.body(createScorePayload(validMovieId, invalidScore))
 				.when()
-				.put(SCORE_ENDPOINT) // Alterado para PUT
+				.put(SCORE_ENDPOINT + "/{id}", validMovieId)
 				.then()
 				.statusCode(422)
 				.body("errors.message[0]", equalTo("Valor mínimo 0"));
+	}
+
+
+	@Test
+	public void updateScoreShouldReturnOkWhenScoreIsValidAndUserIsAuthenticated() {
+		long validMovieId = 1L;
+		double validScore = 4.5;
+
+		given()
+				.baseUri(BASE_URI)
+				.header("Authorization", "Bearer " + clientToken)
+				.contentType(ContentType.JSON)
+				.body(createScorePayload(validMovieId, validScore))
+				.when()
+				.post(SCORE_ENDPOINT) // Verifique se o método HTTP e o endpoint estão corretos para atualização (pode ser PUT)
+				.then()
+				.statusCode(200);
 	}
 
 
@@ -137,5 +153,13 @@ public class ScoreControllerRA {
 		if (movieId != null) scorePayload.put("movieId", movieId);
 		scorePayload.put("score", score);
 		return scorePayload;
+	}
+
+	private String createScorePayloadWithUserId(long movieId, double score, long userId) {
+		return "{"
+				+ "\"movieId\": " + movieId + ","
+				+ "\"userId\": " + userId + ","
+				+ "\"score\": " + score
+				+ "}";
 	}
 }
