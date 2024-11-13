@@ -135,9 +135,7 @@ Objetivo: Verificar que a API retorne 200 OK ao atualizar uma pontuação de for
 
 <p>🚀 24 - Pull Request</p>
 
-  <p >
-
- </p>
+  <p ></p>
 
 <h3>Maior Desafio Superado: </h3>
  <p></p>
@@ -147,6 +145,28 @@ Objetivo: Verificar que a API retorne 200 OK ao atualizar uma pontuação de for
 
  <h3>Algum dos requisitos que não foi desenvolvido? Se sim, explique o motivo. </h3>
  <p>Todos os requisitos foram atendidos.</p>
+
+
+ <h3>Demais desafios relacionado ao curso Java Spring Expert: </h3>
+ <p></p>
+
+
+<p >
+<a href="https://github.com/anapedra/desafio1-TDD.git">🔗 desafioTDD-01/Testes Automatizados</a>
+ </p>
+
+<p >
+<a href="https://github.com/anapedra/desafiotdd-2.git">🔗 desafioTDD-02/Validação e Segurança</a>
+ </p>
+
+ <p >
+<a href="https://github.com/anapedra/desafio-tdd-movieflix.git">🔗 desafioTDD-03/Casos de Uso</a>
+ </p>
+
+
+<p >
+<a href="https://github.com/anapedra/desafio-jacoco">🔗 desafioTDD-03/Cobertura de Testes com Jacoco </a>
+ </p>
 
  <h3>Pesquisas, projetos ou cursos de Referência: </h3>
  <p></p>
